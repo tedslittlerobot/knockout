@@ -92,6 +92,18 @@ export default class LoopingContenderIterator {
     return this.source.size
   }
 
+  yank() {
+    const value = this.next
+
+    if (!value) {
+      return null
+    }
+
+    this.remove(value)
+
+    return value
+  }
+
   remove(contender: Contender) {
     this.source.delete(contender.id)
   }
@@ -103,16 +115,22 @@ export default class LoopingContenderIterator {
     return this
   }
 
-  find(matcher: ContenderMatcher): Contender|null {
+  find(matcher: ContenderMatcher, deleteIfFound = false): Contender|null {
     this.clearLoop()
     let value: Contender | null
 
     while(value = this.#wrappedIterate(!this.#loopOrigin)) {
       if (matcher(value)) {
+        if (deleteIfFound) {
+          this.remove(value)
+        }
+
+        this.clearLoop()
         return value
       }
     }
 
+    this.clearLoop()
     return null
   }
 }
