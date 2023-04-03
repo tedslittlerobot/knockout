@@ -1,27 +1,18 @@
 import { defineStore } from "pinia";
-import useRosters, { type Contender } from "./rosters";
+import type { Contender, Roster } from "./rosters";
 
 export default defineStore({
   id: "battle",
 
   state: (): BattleState => ({
-    rosterId: '',
+    roster: { id: '', name: '', contenders: [] },
     excludedContenders: [],
     rounds: [],
     stats: {},
   }),
 
   getters: {
-    roster({ rosterId }) {
-      const rosters = useRosters()
-
-      return rosters.rosters.find(item => rosterId === item.id)!
-    },
-    contenders({ rosterId, excludedContenders }) {
-      const rosters = useRosters()
-
-      const roster = rosters.rosters.find(item => rosterId === item.id)!
-
+    contenders({ roster, excludedContenders }) {
       return roster.contenders.filter(item => !excludedContenders.includes(item.id))
     },
     currentRound(): BattleRound {
@@ -30,10 +21,10 @@ export default defineStore({
   },
 
   actions: {
-    begin(rosterId: string, exclusions: string[]) {
+    begin(roster: Roster, exclusions: string[]) {
       this.$reset()
 
-      this.rosterId = rosterId
+      this.roster = roster
       this.excludedContenders = exclusions
 
       this.nextRound()
@@ -65,8 +56,8 @@ export default defineStore({
           round.push([ prime[1], candidate[1] ])
         }
 
-        console.info('pool at close', contenders)
-        console.info('round at close', round)
+        // console.info('pool at close', contenders)
+        // console.info('round at close', round)
       }
 
       this.rounds.push(round)
@@ -75,14 +66,14 @@ export default defineStore({
 });
 
 export interface BattleState {
-  rosterId: string
+  roster: Roster
   excludedContenders: string[]
   rounds: BattleRound[]
   stats: { [key:string]: BattleUserStats }
 }
 
-type BattleRound = BattleFaceOff[]
-type BattleFaceOff = [Contender, Contender, Contender?]
+export type BattleRound = BattleFaceOff[]
+export type BattleFaceOff = [Contender, Contender, Contender?]
 
 interface BattleUserStats {
   contenderId: string,

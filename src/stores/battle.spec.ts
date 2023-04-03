@@ -1,95 +1,84 @@
-import { defineStore } from "pinia";
-import useRosters, { type Contender } from "./rosters";
+import { describe, it, expect } from 'vitest'
+import { createPinia } from 'pinia'
+import useBattle, { type BattleState, type BattleFaceOff } from './battle'
+import type { Roster } from './rosters'
 
-export default defineStore({
-  id: "battle",
-
-  state: (): BattleState => ({
-    rosterId: '',
-    excludedContenders: [],
-    rounds: [],
-    stats: {},
-  }),
-
-  getters: {
-    roster({ rosterId }) {
-      const rosters = useRosters()
-
-      return rosters.rosters.find(item => rosterId === item.id)!
-    },
-    contenders({ rosterId, excludedContenders }) {
-      const rosters = useRosters()
-
-      const roster = rosters.rosters.find(item => rosterId === item.id)!
-
-      return roster.contenders.filter(item => !excludedContenders.includes(item.id))
-    },
-    currentRound(): BattleRound {
-      return this.rounds[this.rounds.length - 1]
-    }
-  },
-
-  actions: {
-    begin(rosterId: string, exclusions: string[]) {
-      this.$reset()
-
-      this.rosterId = rosterId
-      this.excludedContenders = exclusions
-
-      this.nextRound()
-    },
-    nextRound() {
-      const contenders = new Map(this.contenders.map(({id, name, avoid}) => [id, { id, name, avoid }]))
-      let round: BattleRound = []
-
-      let iteration = 0
-
-      while (contenders.size > 0) {
-        iteration++
-        if (iteration > 10) {
-          throw Error('infinite loop detected')
-        }
-
-        const iterator = contenders.entries()
-
-        const prime = iterator.next().value as [string, Contender]
-        contenders.delete(prime[0])
-
-        // if there is one left over, they go in a random three
-        if (contenders.size === 0) {
-          round[Math.floor((Math.random() * round.length))].push(prime[1])
-        } else {
-          const candidate = iterator.next().value as [string, Contender]
-          contenders.delete(candidate[0])
-
-          round.push([ prime[1], candidate[1] ])
-        }
-
-        console.info('pool at close', contenders)
-        console.info('round at close', round)
-      }
-
-      this.rounds.push(round)
-    }
-  },
-});
-
-export interface BattleState {
-  rosterId: string
-  excludedContenders: string[]
-  rounds: BattleRound[]
-  stats: { [key:string]: BattleUserStats }
+function faceOffNames(faceoff: BattleFaceOff) {
+  return faceoff.map(item => item?.name)
 }
 
-type BattleRound = BattleFaceOff[]
-type BattleFaceOff = [Contender, Contender, Contender?]
+// describe('Two Person Battle', () => {
+//   const roster: Roster = {
+//     id: 'roster-id',
+//     name: 'Tina',
+//     contenders: [
+//       { id: 'contender-a', name: 'Alison', avoid: null },
+//       { id: 'contender-b', name: 'Brett', avoid: null },
+//     ],
+//   }
 
-interface BattleUserStats {
-  contenderId: string,
-  rounds: BattleUserRound[]
-}
+//   it('has a single face-off', () => {
+//     const battle = useBattle(createPinia())
+//     battle.begin(roster, [])
 
-interface BattleUserRound {
-  isComplete: boolean
-  opponents: string[]
-}
+//     expect(battle.rounds.length).toBe(1)
+
+//     expect(faceOffNames(battle.rounds[0][0])).toStrictEqual([ 'Alison', 'Brett' ])
+//   })
+// })
+
+// describe('Three Person Battle', () => {
+//   const roster: Roster = {
+//     id: 'roster-id',
+//     name: 'Justin',
+//     contenders: [
+//       { id: 'contender-a', name: 'Alison', avoid: null },
+//       { id: 'contender-b', name: 'Brett', avoid: null },
+//       { id: 'contender-c', name: 'Caroline', avoid: null },
+//     ],
+//   }
+
+//   it('has a first round of a three way', () => {
+//     const battle = useBattle(createPinia())
+//     battle.begin(roster, [])
+
+//     expect(battle.rounds.length).toBe(1)
+
+//     expect(faceOffNames(battle.rounds[0][0])).toStrictEqual([ 'Alison', 'Brett', 'Caroline' ])
+//   })
+
+//   it('has a two way when one is excluded', () => {
+//     const battle = useBattle(createPinia())
+//     battle.begin(roster, ['contender-b'])
+
+//     expect(battle.rounds.length).toBe(1)
+
+//     expect(faceOffNames(battle.rounds[0][0])).toStrictEqual([ 'Alison', 'Caroline' ])
+//   })
+// })
+
+describe('Four Person Battle', () => {
+  const roster: Roster = {
+    id: 'roster-id',
+    name: 'Frankie',
+    contenders: [
+      { id: 'contender-a', name: 'Alison', avoid: null },
+      { id: 'contender-b', name: 'Brett', avoid: null },
+      { id: 'contender-c', name: 'Caroline', avoid: null },
+      { id: 'contender-d', name: 'Derek', avoid: null },
+    ],
+  }
+
+  it('has two face-offs', () => {
+    const battle = useBattle(createPinia())
+    battle.begin(roster, [])
+
+    expect(battle.rounds.length).toBe(1)
+
+    const round = battle.rounds[0]
+    expect(round.length).toBe(2)
+
+    expect(faceOffNames(round[0])).toStrictEqual([ 'Alison', 'Brett' ])
+    expect(faceOffNames(round[0])).toStrictEqual([ 'Caroline', 'Derek' ])
+  })
+})
