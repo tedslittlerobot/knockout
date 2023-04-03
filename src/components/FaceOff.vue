@@ -10,7 +10,12 @@ const battle = stores.battle();
 <template>
   <h1>BATTLE</h1>
   <section>
-    <article class="flex w-full gap-4" :class="{ ThreeWay: faceoff.length === 3, TwoWay: faceoff.length === 2 }" v-for="faceoff in battle.currentRound">
+    <article
+      class="flex w-full gap-4"
+      :class="{ ThreeWay: faceoff.length === 3, TwoWay: faceoff.length === 2 }"
+      v-for="faceoff in battle.currentRound"
+      :key="faceoff.join('::')"
+    >
       <div>
         {{ faceoff[0].name }}
       </div>

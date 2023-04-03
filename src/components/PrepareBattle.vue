@@ -13,9 +13,9 @@ const roster = computed(() => rosters.rosters.find(item => item.id === props.rou
 const exclusions = ref<string[]>([])
 
 function doBattle() {
-  battle.begin(roster.value.id, exclusions.value)
+  battle.begin(roster.value, exclusions.value)
 
-  ux.route = { route: 'battle:go' }
+  ux.route = { route: 'battle:face-off' }
 }
 
 function toggleExclusion(contenderId: string) {

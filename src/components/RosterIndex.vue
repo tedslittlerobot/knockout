@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import stores from '@/stores'
-import type { HomeRoute } from '@/stores/ux';
+import type { RosterIndexRoute } from '@/stores/ux';
 
-defineProps<{ route: HomeRoute }>()
+defineProps<{ route: RosterIndexRoute }>()
 
 const rosters = stores.rosters()
 const ux = stores.ux()
@@ -11,7 +11,7 @@ const ux = stores.ux()
 <template>
   <section class="my-8 flex justify-center">
     <div class="flex flex-col gap-4">
-      <div class="Roster" v-for="roster in rosters.rosters">
+      <div class="Roster" v-for="roster in rosters.rosters" :key="roster.id">
         <div class="flex">
           <div class="grow">
             <h3>{{ roster.name }}</h3>

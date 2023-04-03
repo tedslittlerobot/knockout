@@ -33,7 +33,7 @@ export default defineStore({
     nextRound() {
       const iterator = new LoopingContenderIterator(this.contenders)
 
-      let resultingBattleRound: BattleRound = []
+      const resultingBattleRound: BattleRound = []
 
       let iteration = 0
 

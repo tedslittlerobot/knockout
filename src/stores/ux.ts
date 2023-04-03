@@ -4,7 +4,7 @@ export default defineStore({
   id: "ux",
 
   state: (): UxState => ({
-    route: { route: 'home' },
+    route: { route: 'roster:index' },
   }),
 
   getters: {
@@ -21,14 +21,14 @@ export interface UxState {
 }
 
 export type UxRoute =
-  | HomeRoute
+  | RosterIndexRoute
   | CreateRosterRoute
   | UpdateRosterRoute
   | PrepareBattleRoute
   | BattleRoute;
 
-export interface HomeRoute {
-  route: 'home',
+export interface RosterIndexRoute {
+  route: 'roster:index',
 }
 
 export interface CreateRosterRoute {
@@ -46,5 +46,5 @@ export interface PrepareBattleRoute {
 }
 
 export interface BattleRoute {
-  route: 'battle:go',
+  route: 'battle:face-off',
 }

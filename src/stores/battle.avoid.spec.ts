@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { createPinia } from 'pinia'
-import useBattle, { type BattleState, type BattleFaceOff } from './battle'
+import useBattle, { type BattleFaceOff } from './battle'
 import type { Roster } from './rosters'
 
 function faceOffNames(faceoff: BattleFaceOff) {

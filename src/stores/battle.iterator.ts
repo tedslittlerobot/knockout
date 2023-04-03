@@ -123,6 +123,7 @@ export default class LoopingContenderIterator {
     this.clearLoop()
     let value: Contender | null
 
+    // eslint-disable-next-line no-cond-assign
     while(value = this.#wrappedIterate(!this.#loopOrigin)) {
       if (matcher(value)) {
         if (deleteIfFound) {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Router from './Router.vue';
+import BattleRouter from './BattleRouter.vue';
 
 </script>
 
@@ -9,7 +9,7 @@ import Router from './Router.vue';
   </header>
 
   <main>
-    <Router />
+    <BattleRouter />
   </main>
 </template>
 
