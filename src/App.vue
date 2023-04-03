@@ -1,47 +1,26 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import Router from './Router.vue';
+
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
+    <h1>Knockout</h1>
   </header>
 
   <main>
-    <TheWelcome />
+    <Router />
   </main>
 </template>
 
 <style scoped>
 header {
-  line-height: 1.5;
+  @apply mb-5
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+h1 {
+  @apply text-6xl text-center text-fuchsia-400
 }
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+main {
+  @apply lg:w-[960px]
 }
 </style>

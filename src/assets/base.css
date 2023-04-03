@@ -19,3 +19,24 @@
 @tailwind components;
 
 @tailwind utilities;
+
+@layer buttons {
+  .btn {
+    @apply p-3 rounded-2xl text-center border border-gray-400;
+    @apply transition-opacity duration-100;
+    @apply cursor-pointer;
+    @apply hover:opacity-80 hover:border-gray-200;
+  }
+
+  .btn-teal {
+    @apply btn bg-teal-700
+  }
+
+  .btn-cyan {
+    @apply btn bg-cyan-700
+  }
+
+  .btn-fuchsia {
+    @apply btn bg-fuchsia-600
+  }
+}
