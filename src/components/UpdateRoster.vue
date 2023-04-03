@@ -2,7 +2,6 @@
 import stores from '@/stores';
 import { ref, watch, onMounted, computed } from 'vue';
 import { v4 as uuid4 } from 'uuid'
-import type { Roster } from '@/stores/rosters';
 import type { UpdateRosterRoute } from '@/stores/ux';
 
 const props = defineProps<{ route: UpdateRosterRoute }>()
@@ -55,7 +54,7 @@ function save() {
       })),
   })
 
-  ux.route = {route: 'home'}
+  ux.route = { route: 'home' }
 }
 </script>
 

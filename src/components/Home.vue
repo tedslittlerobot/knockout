@@ -23,10 +23,10 @@ const ux = stores.ux()
         </div>
 
         <div
-          class="mt-4 btn-fuchsia"
+          class="mt-4 btn-fuchsia font-light text-xl"
           @click.exact="ux.route = { 'route': 'battle:prepare', rosterId: roster.id }"
         >
-          Launch!
+          Go!
         </div>
 
       </div>

@@ -40,7 +40,7 @@ function save() {
     return
   }
 
-  rosters.add({
+  const created = {
     id: uuid4(),
     name: name.value,
     contenders: contenders.value
@@ -50,9 +50,11 @@ function save() {
         name,
         avoid: avoid ? new RegExp(avoid) : null
       })),
-  })
+  }
 
-  ux.route = { route: 'home' }
+  rosters.add(created)
+
+  ux.route = { route: 'battle:prepare', rosterId: created.id }
 }
 </script>
 

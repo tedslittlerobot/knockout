@@ -4,6 +4,7 @@ import Home from "./components/Home.vue";
 import CreateRoster from "./components/CreateRoster.vue";
 import UpdateRoster from './components/UpdateRoster.vue';
 import PrepareBattle from './components/PrepareBattle.vue';
+import Battle from './components/Battle.vue';
 
 const ux = stores.ux();
 </script>
@@ -13,4 +14,5 @@ const ux = stores.ux();
   <CreateRoster v-else-if="ux.route.route === 'roster:create'" :route="ux.route" />
   <UpdateRoster v-else-if="ux.route.route === 'roster:update'" :route="ux.route" />
   <PrepareBattle v-else-if="ux.route.route === 'battle:prepare'" :route="ux.route" />
+  <Battle v-else-if="ux.route.route === 'battle:go'" :route="ux.route" />
 </template>

@@ -24,19 +24,27 @@ export type UxRoute =
   | HomeRoute
   | CreateRosterRoute
   | UpdateRosterRoute
-  | PrepareBattleRoute;
+  | PrepareBattleRoute
+  | BattleRoute;
 
 export interface HomeRoute {
   route: 'home',
 }
+
 export interface CreateRosterRoute {
   route: 'roster:create',
 }
+
 export interface UpdateRosterRoute {
   route: 'roster:update',
   rosterId: string,
 }
+
 export interface PrepareBattleRoute {
   route: 'battle:prepare',
   rosterId: string,
+}
+
+export interface BattleRoute {
+  route: 'battle:go',
 }
