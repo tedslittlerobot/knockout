@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import stores from '@/stores';
 import type { BattleRoute } from '@/stores/ux';
+import versusImage from './icons/sf-vs.png'
 
 defineProps<{ route: BattleRoute }>()
 
@@ -9,23 +10,23 @@ const battle = stores.battle();
 
 <template>
   <h1>BATTLE</h1>
-  <section>
+  <section class="flex flex-col gap-8">
     <article
-      class="flex w-full gap-4"
+      class="flex w-full gap-2"
       :class="{ ThreeWay: faceoff.length === 3, TwoWay: faceoff.length === 2 }"
       v-for="faceoff in battle.currentRound"
       :key="faceoff.join('::')"
     >
-      <div>
+      <div class="ContenderName" :class="{ 'text-orange-500': true }">
         {{ faceoff[0].name }}
       </div>
-      <div>vs</div>
-      <div>
+      <div class="VersusImage"><img :src="versusImage" /></div>
+      <div class="ContenderName" :class="{ 'text-orange-500': true }">
         {{ faceoff[1].name }}
       </div>
       <template v-if="faceoff[2]">
-        <div>vs</div>
-        <div>
+        <div class="VersusImage"><img :src="versusImage" /></div>
+        <div class="ContenderName" :class="{ 'text-orange-500': true }">
           {{ faceoff[2].name }}
         </div>
       </template>
@@ -35,12 +36,24 @@ const battle = stores.battle();
 
 <style scoped>
 article {
-  @apply text-center
+  @apply text-center font-street-fighter
 }
-article.ThreeWay>div {
+article.ThreeWay>* {
   @apply w-1/5
 }
-article.TwoWay>div {
+article.TwoWay>* {
   @apply w-1/3
+}
+
+article>div {
+  @apply flex items-center justify-center
+}
+
+article>.ContenderName {
+  @apply text-3xl
+}
+
+article>.VersusImage img {
+  @apply max-h-16
 }
 </style>

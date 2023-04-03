@@ -62,5 +62,6 @@ article {
   @apply flex items-center justify-center;
   @apply h-28 cursor-pointer font-extralight text-3xl;
   @apply rounded-lg border-2;
+  @apply font-street-fighter;
 }
 </style>
