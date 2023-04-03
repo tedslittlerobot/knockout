@@ -2,11 +2,23 @@ import { defineStore } from "pinia";
 import type { Contender, Roster } from "./rosters";
 import LoopingContenderIterator from "./battle.iterator";
 
+const swatches = [
+  { text: 'text-orange-500' },
+  { text: 'text-pink-500' },
+  { text: 'text-indigo-500' },
+  { text: 'text-lime-500' },
+  { text: 'text-teal-500' },
+  { text: 'text-sky-500' },
+  { text: 'text-violet-500' },
+  { text: 'text-fuchsia-500' },
+]
+
 export default defineStore({
   id: "battle",
 
   state: (): BattleState => ({
     roster: { id: '', name: '', contenders: [] },
+    swatches: {},
     excludedContenders: [],
     rounds: [],
     stats: {},
@@ -27,6 +39,9 @@ export default defineStore({
 
       this.roster = roster
       this.excludedContenders = exclusions
+      this.roster.contenders.forEach(({ id }, index) => {
+        this.swatches[id] = swatches[index % swatches.length]
+      })
 
       this.nextRound()
     },
@@ -83,6 +98,7 @@ export default defineStore({
 
 export interface BattleState {
   roster: Roster
+  swatches: { [key:string]: { text: string } }
   excludedContenders: string[]
   rounds: BattleRound[]
   stats: { [key:string]: BattleUserStats }

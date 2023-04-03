@@ -17,16 +17,16 @@ const battle = stores.battle();
       v-for="faceoff in battle.currentRound"
       :key="faceoff.join('::')"
     >
-      <div class="ContenderName" :class="{ 'text-orange-500': true }">
+      <div class="ContenderName" :class="{ [battle.swatches[faceoff[0].id].text]: true }">
         {{ faceoff[0].name }}
       </div>
       <div class="VersusImage"><img :src="versusImage" /></div>
-      <div class="ContenderName" :class="{ 'text-orange-500': true }">
+      <div class="ContenderName" :class="{ [battle.swatches[faceoff[1].id].text]: true }">
         {{ faceoff[1].name }}
       </div>
       <template v-if="faceoff[2]">
         <div class="VersusImage"><img :src="versusImage" /></div>
-        <div class="ContenderName" :class="{ 'text-orange-500': true }">
+        <div class="ContenderName" :class="{ [battle.swatches[faceoff[2].id].text]: true }">
           {{ faceoff[2].name }}
         </div>
       </template>
@@ -50,7 +50,8 @@ article>div {
 }
 
 article>.ContenderName {
-  @apply text-3xl
+  @apply text-4xl;
+  text-shadow: -1px -1px 0 #EEEEEE, 1px -1px 0 #EEEEEE, -1px 1px 0 #EEEEEE, 1px 1px 0 #EEEEEE;
 }
 
 article>.VersusImage img {
