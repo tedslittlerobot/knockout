@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import type { Contender, Roster } from "./rosters";
+import LoopingContenderIterator from "./battle.iterator";
 
 export default defineStore({
   id: "battle",
@@ -30,37 +31,52 @@ export default defineStore({
       this.nextRound()
     },
     nextRound() {
-      const contenders = new Map(this.contenders.map(({id, name, avoid}) => [id, { id, name, avoid }]))
-      let round: BattleRound = []
+      const iterator = new LoopingContenderIterator(this.contenders)
+
+      let resultingBattleRound: BattleRound = []
 
       let iteration = 0
 
-      while (contenders.size > 0) {
+      while (iterator.size > 0) {
         iteration++
         if (iteration > 10) {
           throw Error('infinite loop detected')
         }
 
-        const iterator = contenders.entries()
+        const redTeam = iterator.yank()
 
-        const prime = iterator.next().value as [string, Contender]
-        contenders.delete(prime[0])
+        if (!redTeam) {
+          break;
+        }
 
         // if there is one left over, they go in a random three
-        if (contenders.size === 0) {
-          round[Math.floor((Math.random() * round.length))].push(prime[1])
+        if (iterator.isEmpty) {
+          resultingBattleRound[Math.floor((Math.random() * resultingBattleRound.length))].push(redTeam)
         } else {
-          const candidate = iterator.next().value as [string, Contender]
-          contenders.delete(candidate[0])
+          const blueTeam = iterator.find(candidate => {
+            if (redTeam.avoid && redTeam.avoid.test(candidate.name)) {
+              return false
+            }
 
-          round.push([ prime[1], candidate[1] ])
+            if (candidate.avoid && candidate.avoid.test(redTeam.name)) {
+              return false
+            }
+
+            return true;
+          }, true)
+
+          if (!blueTeam) {
+            throw Error('Cannot find a blueTeam')
+          }
+
+          resultingBattleRound.push([ redTeam, blueTeam ])
         }
 
         // console.info('pool at close', contenders)
         // console.info('round at close', round)
       }
 
-      this.rounds.push(round)
+      this.rounds.push(resultingBattleRound)
     }
   },
 });

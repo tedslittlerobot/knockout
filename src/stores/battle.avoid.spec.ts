@@ -7,7 +7,7 @@ function faceOffNames(faceoff: BattleFaceOff) {
   return faceoff.map(item => item?.name)
 }
 
-describe('Four Person Battle with nemeses', () => {
+describe('Four Person Battle with Nemeses', () => {
   const roster: Roster = {
     id: 'roster-id',
     name: 'Francesco',
@@ -29,6 +29,6 @@ describe('Four Person Battle with nemeses', () => {
     expect(round.length).toBe(2)
 
     expect(faceOffNames(round[0])).toStrictEqual([ 'Alison', 'Caroline' ])
-    expect(faceOffNames(round[0])).toStrictEqual([ 'Brett', 'Derek' ])
+    expect(faceOffNames(round[1])).toStrictEqual([ 'Derek', 'Brett' ])
   })
 })

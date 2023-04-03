@@ -92,6 +92,10 @@ export default class LoopingContenderIterator {
     return this.source.size
   }
 
+  get isEmpty() {
+    return this.source.size === 0
+  }
+
   yank() {
     const value = this.next
 
