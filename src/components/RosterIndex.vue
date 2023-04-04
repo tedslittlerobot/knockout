@@ -11,7 +11,11 @@ const ux = stores.ux()
 <template>
   <section class="my-8 flex justify-center">
     <div class="flex flex-col gap-4">
-      <div class="Roster" v-for="roster in rosters.rosters" :key="roster.id">
+      <div
+        class="Roster"
+        v-for="roster in rosters.rosters"
+        :key="roster.id"
+      >
         <div class="flex">
           <div class="grow">
             <h3>{{ roster.name }}</h3>
@@ -19,6 +23,7 @@ const ux = stores.ux()
           </div>
           <div>
             <div class="EditButton" @click="ux.route = { route: 'roster:update', rosterId: roster.id }">✏️</div>
+            <div class="DeleteButton" @click="rosters.remove(roster)">🗑️</div>
           </div>
         </div>
 
@@ -55,7 +60,13 @@ const ux = stores.ux()
 
 .EditButton {
   @apply cursor-pointer;
-  @apply rounded-full w-8 h-8 hover:bg-blue-300 hover:bg-opacity-20;
+  @apply rounded-full w-8 h-8 hover:bg-blue-800 hover:bg-opacity-50;
+  @apply flex items-center justify-center;
+}
+
+.DeleteButton {
+  @apply cursor-pointer;
+  @apply rounded-full w-8 h-8 hover:bg-red-800 hover:bg-opacity-50;
   @apply flex items-center justify-center;
 }
 </style>

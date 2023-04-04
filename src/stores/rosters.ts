@@ -49,6 +49,17 @@ export default defineStore({
     persist() {
       localStorage.setItem('rosters', JSON.stringify(this.rosters))
     },
+    remove(roster: Roster) {
+      const index = this.rosters.findIndex(item => item.id === roster.id)
+
+      if (index === -1) {
+        throw Error('Cannot find roster to delete')
+      }
+
+      this.rosters.splice(index, 1)
+
+      this.persist()
+    }
   },
 });
 

@@ -1,17 +1,7 @@
 import { defineStore } from "pinia";
 import type { Contender, Roster } from "./rosters";
-import LoopingContenderIterator from "./battle.iterator";
-
-const swatches = [
-  { text: 'text-orange-500' },
-  { text: 'text-pink-500' },
-  { text: 'text-indigo-500' },
-  { text: 'text-lime-500' },
-  { text: 'text-teal-500' },
-  { text: 'text-sky-500' },
-  { text: 'text-violet-500' },
-  { text: 'text-fuchsia-500' },
-]
+import swatch from "@/helpers/swatches";
+import BattleRoundRunner from "@/helpers/BattleRoundRunner";
 
 export default defineStore({
   id: "battle",
@@ -40,58 +30,17 @@ export default defineStore({
       this.roster = roster
       this.excludedContenders = exclusions
       this.roster.contenders.forEach(({ id }, index) => {
-        this.swatches[id] = swatches[index % swatches.length]
+        this.swatches[id] = swatch('battleText', index)
       })
 
       this.nextRound()
     },
     nextRound() {
-      const iterator = new LoopingContenderIterator(this.contenders)
+      const runner = new BattleRoundRunner(this.contenders)
 
-      const resultingBattleRound: BattleRound = []
+      runner.run()
 
-      let iteration = 0
-
-      while (iterator.size > 0) {
-        iteration++
-        if (iteration > 10) {
-          throw Error('infinite loop detected')
-        }
-
-        const redTeam = iterator.yank()
-
-        if (!redTeam) {
-          break;
-        }
-
-        // if there is one left over, they go in a random three
-        if (iterator.isEmpty) {
-          resultingBattleRound[Math.floor((Math.random() * resultingBattleRound.length))].push(redTeam)
-        } else {
-          const blueTeam = iterator.find(candidate => {
-            if (redTeam.avoid && redTeam.avoid.test(candidate.name)) {
-              return false
-            }
-
-            if (candidate.avoid && candidate.avoid.test(redTeam.name)) {
-              return false
-            }
-
-            return true;
-          }, true)
-
-          if (!blueTeam) {
-            throw Error('Cannot find a blueTeam')
-          }
-
-          resultingBattleRound.push([ redTeam, blueTeam ])
-        }
-
-        // console.info('pool at close', contenders)
-        // console.info('round at close', round)
-      }
-
-      this.rounds.push(resultingBattleRound)
+      this.rounds.push(runner.pairings)
     }
   },
 });
@@ -101,18 +50,20 @@ export interface BattleState {
   swatches: { [key:string]: { text: string } }
   excludedContenders: string[]
   rounds: BattleRound[]
-  stats: { [key:string]: BattleUserStats }
+  stats: BattleStats
 }
 
 export type BattleRound = BattleFaceOff[]
 export type BattleFaceOff = [Contender, Contender, Contender?]
 
-interface BattleUserStats {
+export interface BattleStats { [key:string]: BattleUserStats }
+
+export interface BattleUserStats {
   contenderId: string,
   rounds: BattleUserRound[]
 }
 
-interface BattleUserRound {
+export interface BattleUserRound {
   isComplete: boolean
   opponents: string[]
 }

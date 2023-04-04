@@ -1,4 +1,4 @@
-import type { Contender } from "./rosters";
+import type { Contender } from "@/stores/rosters";
 
 type ContenderMatcher = (value: Contender) => boolean
 
@@ -137,5 +137,13 @@ export default class LoopingContenderIterator {
 
     this.clearLoop()
     return null
+  }
+
+  startFromBeginning() {
+    this.#iterator = this.source.values()
+    this.#loopOrigin = null
+    this.#loopCache = null
+
+    return this
   }
 }

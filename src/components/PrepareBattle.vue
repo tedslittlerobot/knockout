@@ -2,6 +2,7 @@
 import stores from '@/stores';
 import type { PrepareBattleRoute } from '@/stores/ux';
 import { computed, ref } from 'vue';
+import swatch from "@/helpers/swatches";
 
 const props = defineProps<{ route: PrepareBattleRoute }>()
 
@@ -26,10 +27,10 @@ function toggleExclusion(contenderId: string) {
   }
 }
 
-const swatch = [
-  'bg-purple-800 hover:bg-purple-700',
-  'bg-blue-800 hover:bg-blue-700',
-]
+// const swatch = [
+//   'bg-purple-800 hover:bg-purple-700',
+//   'bg-blue-800 hover:bg-blue-700',
+// ]
 </script>
 
 <template>
@@ -39,9 +40,11 @@ const swatch = [
     <article
       v-for="(contender, index) in roster.contenders"
       :key="contender.id"
+      class="street-fighter"
       :class="{
-        [`${swatch[index % swatch.length]}`]: !exclusions.includes(contender.id),
-        'border-gray-400 text-gray-400': exclusions.includes(contender.id),
+        [swatch('battleText', index).text]: !exclusions.includes(contender.id),
+        // [`${swatch[index % swatch.length]}`]: !exclusions.includes(contender.id),
+        'border-gray-400 text-gray-400 opacity-30': exclusions.includes(contender.id),
       }"
       @click.exact="toggleExclusion(contender.id)"
     >
@@ -61,7 +64,8 @@ const swatch = [
 article {
   @apply flex items-center justify-center;
   @apply h-28 cursor-pointer font-extralight text-3xl;
-  @apply rounded-lg border-2;
+  /* @apply rounded-lg border-2; */
   @apply font-street-fighter;
+  @apply shadow-inner hover:shadow-lg
 }
 </style>

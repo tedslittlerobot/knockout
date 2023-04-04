@@ -39,4 +39,10 @@
   .btn-fuchsia {
     @apply btn bg-fuchsia-600
   }
+
+  .street-fighter {
+    @apply font-street-fighter;
+
+    text-shadow: -1px -1px 0 #EEEEEE, 1px -1px 0 #EEEEEE, -1px 1px 0 #EEEEEE, 1px 1px 0 #EEEEEE;
+  }
 }
