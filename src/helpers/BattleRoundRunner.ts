@@ -1,5 +1,5 @@
 import type { Contender } from "@/stores/rosters";
-import helpers from './battleHelpers'
+import { prioritiseContenders, shouldAllowPairingOf, shouldAllowPairingOfPair } from './battleHelpers'
 import LoopingContenderIterator from "./LoopingContenderIterator";
 import type { BattleRound, BattleStats, BattleUserRound, BattleUserStats } from "@/stores/battle";
 
@@ -12,10 +12,15 @@ export default class BattleRoundRunner {
 
   constructor(source: Contender[]) {
     this.#contenders = source
-    this.#iterator = new LoopingContenderIterator(helpers.prioritiseContenders(source))
+    this.#iterator = new LoopingContenderIterator(prioritiseContenders(source))
   }
 
-  run() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  #debug(message: string, data?: any) {
+    // console.info(message, data)
+  }
+
+  run(stats: BattleStats) {
     while (this.#iterator.size > 0) {
       this.#remainingSafeIterations--
 
@@ -31,30 +36,81 @@ export default class BattleRoundRunner {
       }
 
       // if there is one left over, they go in a random three
-      if (this.#iterator.isEmpty) {
-        this.assignThreesome(incumbant)
+      if (!this.#iterator.isEmpty) {
+        this.assignChallenger(incumbant, stats)
       } else {
-        const challenger = this.findChallenger(incumbant)
-
-        if (!challenger) {
-          throw Error('Cannot find a challenger')
-        }
-
-        this.pairings.push([ incumbant, challenger ])
+        this.assignThreesome(incumbant, stats)
       }
 
       this.#debug('End of Loop', this)
     }
   }
 
-  assignThreesome(thirdWheel: Contender) {
-    this.pairings[Math.floor((Math.random() * this.pairings.length))].push(thirdWheel)
+  findChallenger(target: Contender, stats: BattleStats): Contender | null {
+    this.#debug('attempting to find challenger for', target)
+
+    const targetStats = stats[target.id]
+    const previousRounds = targetStats ? targetStats.rounds : []
+
+    const idealMatch = previousRounds.filter(round => !round.isComplete)
+      .map(({ opponents }) => opponents)
+      .reduce<Contender|null>((found, opponents) => {
+        if (found) { return found }
+
+        this.#debug('    Checking for opponents not faught in round', opponents)
+
+        const perfectMatch = this.#iterator.startFromBeginning().find(candidate => {
+          return shouldAllowPairingOfPair(target, candidate) && !opponents.includes(candidate.id)
+        }, true)
+
+        if (perfectMatch) {
+          return perfectMatch
+        }
+
+        return null
+      }, null)
+
+    if (idealMatch) {
+      return idealMatch
+    }
+
+    // just find anyone!
+    const imperfectMatch = this.#iterator.startFromBeginning().find(candidate => {
+      return shouldAllowPairingOfPair(target, candidate)
+    }, true)
+
+    if (imperfectMatch) {
+      return imperfectMatch
+    }
+
+    return null
   }
 
-  findChallenger(target: Contender) {
-    return this.#iterator.startFromBeginning().find(candidate => {
-      return helpers.shouldAllowPairing(target, candidate)
-    }, true)
+  assignChallenger(incumbant: Contender, stats: BattleStats) {
+    const challenger = this.findChallenger(incumbant, stats)
+
+    this.#debug('found challenger', challenger)
+
+    if (!challenger) {
+      throw Error('Cannot find a challenger')
+    }
+
+    this.pairings.push([ incumbant, challenger ])
+  }
+
+  assignThreesome(thirdWheel: Contender, stats: BattleStats) {
+    const allowedPairings = this.pairings.filter((pairing) => {
+      return shouldAllowPairingOf([thirdWheel, ...(pairing as Contender[])])
+    })
+
+    const perfectMatch = allowedPairings.findIndex(([first, second]) => {
+      // check against stats to find an allowed pairing that also haven't been paired up yet
+      return true
+    })
+
+    if (perfectMatch !== -1) {
+      this.pairings[perfectMatch].push(thirdWheel)
+    }
   }
 
   updateStats(stats: BattleStats, forPairings?: BattleRound) {
@@ -125,7 +181,7 @@ export default class BattleRoundRunner {
       // remove self
       .filter(contender => user.id !== contender.id)
       // remove avoids
-      .filter(contender => helpers.shouldAllowPairing(user, contender))
+      .filter(contender => shouldAllowPairingOfPair(user, contender))
       .reduce((memo, item) => {
         return memo && userRound.opponents.includes(item.id)
       }, true)
@@ -133,10 +189,5 @@ export default class BattleRoundRunner {
     if (allContendersHaveBeenFaced) {
       userRound.isComplete = true
     }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  #debug(message: string, data?: any) {
-    // console.info(message, data)
   }
 }

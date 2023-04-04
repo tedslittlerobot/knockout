@@ -16,7 +16,7 @@ describe('Four Person Battle with Nemeses', () => {
 
   it('has adjusted face-offs, as Alison does not like Brett', () => {
     const battle = new BattleRoundRunner(contenders)
-    battle.run()
+    battle.run({})
 
     expect(battle.pairings.length).toBe(2)
 
@@ -31,7 +31,7 @@ describe('Four Person Battle with Nemeses', () => {
       { id: 'contender-c', name: 'Caroline', avoid: null },
       { id: 'contender-d', name: 'Derek', avoid: null },
     ])
-    battle.run()
+    battle.run({})
 
 
     expect(battle.pairings.length).toBe(2)

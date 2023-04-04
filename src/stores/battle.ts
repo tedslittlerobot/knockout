@@ -38,9 +38,10 @@ export default defineStore({
     nextRound() {
       const runner = new BattleRoundRunner(this.contenders)
 
-      runner.run()
+      runner.run(this.stats)
 
       this.rounds.push(runner.pairings)
+      runner.updateStats(this.stats)
     }
   },
 });
