@@ -27,14 +27,12 @@ function toggleExclusion(contenderId: string) {
   }
 }
 
-// const swatch = [
-//   'bg-purple-800 hover:bg-purple-700',
-//   'bg-blue-800 hover:bg-blue-700',
-// ]
 </script>
 
 <template>
   <h2>Who will be participating?</h2>
+
+  <p>Click on a name to toggle whether they are participating or not.</p>
 
   <section class="grid grid-cols-3 gap-4">
     <article
@@ -61,11 +59,19 @@ function toggleExclusion(contenderId: string) {
 </template>
 
 <style scoped>
+h2 {
+  @apply text-4xl font-street-fighter;
+  @apply mt-10 mb-4;
+}
+
+p {
+  @apply font-street-fighter text-center
+}
+
 article {
   @apply flex items-center justify-center;
   @apply h-28 cursor-pointer font-extralight text-3xl;
   /* @apply rounded-lg border-2; */
-  @apply font-street-fighter;
-  @apply shadow-inner hover:shadow-lg
+  @apply font-street-fighter hover:opacity-70;
 }
 </style>
