@@ -21,7 +21,7 @@ export default defineStore({
     currentRound(): BattleRound {
       const round = this.rounds[this.rounds.length - 1] || []
 
-      return round.sort((a, b) => 0.5 - Math.random())
+      return round.sort(() => 0.5 - Math.random())
     }
   },
 

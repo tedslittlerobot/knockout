@@ -98,6 +98,7 @@ export default class BattleRoundRunner {
     this.pairings.push([ incumbant, challenger ])
   }
 
+  // @todo - handle previous rounds in threesomes
   assignThreesome(thirdWheel: Contender, stats: BattleStats) {
     const allowedPairings = this.pairings.filter((pairing) => {
       return shouldAllowPairingOf([thirdWheel, ...(pairing as Contender[])])

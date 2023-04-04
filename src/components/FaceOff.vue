@@ -58,7 +58,7 @@ function clickNextRound() {
 
     <div class="grid grid-cols-3 gap-4 justify-center">
       <article
-        v-for="(contender, index) in battle.roster.contenders"
+        v-for="contender in battle.roster.contenders"
         :key="contender.id"
         class="street-fighter"
         :class="{
