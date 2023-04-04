@@ -43,7 +43,7 @@ export default class BattleRoundRunner {
         this.pairings.push([ incumbant, challenger ])
       }
 
-      // console.info('End of Loop', this)
+      this.#debug('End of Loop', this)
     }
   }
 
@@ -57,10 +57,12 @@ export default class BattleRoundRunner {
     }, true)
   }
 
-  updateStats(stats: BattleStats) {
-    console.info('Updating stats')
-    this.pairings.forEach(pairing => {
-      console.info('Stats for Pairing', pairing)
+  updateStats(stats: BattleStats, forPairings?: BattleRound) {
+    this.#debug('Updating stats')
+
+    const pairings = (forPairings || this.pairings)
+    pairings.forEach(pairing => {
+      this.#debug('Stats for Pairing', pairing)
       // takes a pairing (a set of two or three contenders), and maps it into a tuple - each element contains first
       // - one contender
       // - an array of the remaining contenders
@@ -77,7 +79,7 @@ export default class BattleRoundRunner {
   // Retrieves the user battle stats, creating a skeleton stats object if none exists
   #retrieveUserBattleStats(contender: Contender, stats: BattleStats) {
     if (!stats[contender.id]) {
-      console.info('    initialising user stats')
+      this.#debug('    initialising user stats')
 
       stats[contender.id] = {
         contenderId: contender.id,
@@ -89,7 +91,7 @@ export default class BattleRoundRunner {
   }
 
   #evaluateAssignmentForContender(contender: Contender, opponents: Contender[], stats: BattleUserStats) {
-    console.info('evaluating stats for: ', contender.name)
+    this.#debug('evaluating stats for: ', contender.name)
 
     opponents.forEach(opponent => {
       this.#evaluateOpponentForContender(contender, opponent, stats)
@@ -97,11 +99,11 @@ export default class BattleRoundRunner {
   }
 
   #evaluateOpponentForContender(contender: Contender, opponent: Contender, stats: BattleUserStats) {
-    console.info('    evaluating opponent: ', opponent.name)
+    this.#debug('    evaluating opponent: ', opponent.name)
 
     let incompleteRounds = stats.rounds.filter(round => !round.isComplete)
     if (incompleteRounds.length === 0) {
-      console.info('        adding new user round as there are no incomplete rounds')
+      this.#debug('        adding new user round as there are no incomplete rounds')
       stats.rounds.push({ isComplete: false, opponents: [] })
       incompleteRounds = stats.rounds.filter(round => !round.isComplete)
     }
@@ -109,7 +111,7 @@ export default class BattleRoundRunner {
     let round = incompleteRounds.find(round => !round.opponents.includes(opponent.id))
 
     if (!round) {
-      console.info('        adding new user round user has already fought opponent')
+      this.#debug('        adding new user round user has already fought opponent')
       round = { isComplete: false, opponents: [] }
       stats.rounds.push(round)
     }
@@ -131,5 +133,10 @@ export default class BattleRoundRunner {
     if (allContendersHaveBeenFaced) {
       userRound.isComplete = true
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  #debug(message: string, data?: any) {
+    // console.info(message, data)
   }
 }
