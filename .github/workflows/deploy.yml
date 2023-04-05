@@ -51,7 +51,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          BASE_URL: '/<REPO>/'
+          BASE_URL: '/${{ github.event.repository.name }}/'
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
