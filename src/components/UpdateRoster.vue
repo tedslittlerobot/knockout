@@ -54,7 +54,7 @@ function save() {
       })),
   })
 
-  ux.route = { route: 'home' }
+  ux.route = { route: 'roster:index' }
 }
 </script>
 

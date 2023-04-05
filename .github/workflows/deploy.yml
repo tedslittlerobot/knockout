@@ -27,8 +27,13 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
+      - name: Run Tests
+        run: npm run test:unit
+      - name: Run Prod Build
+        run: npm run build
 
   deploy:
+    needs: run-tests
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
