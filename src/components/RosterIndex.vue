@@ -38,6 +38,10 @@ const ux = stores.ux()
     </div>
   </section>
 
+  <p v-if="rosters.rosters.length === 0">
+    Add a roster (list of people) to get started!
+  </p>
+
   <div
     class="btn-teal"
     @click.exact="ux.route = { route: 'roster:create' }"
@@ -47,6 +51,10 @@ const ux = stores.ux()
 </template>
 
 <style scoped>
+p {
+  @apply my-8;
+}
+
 .Roster {
   @apply border-2 border-fuchsia-600 p-4 w-full sm:w-96;
   @apply rounded-lg;

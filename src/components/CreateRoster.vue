@@ -100,6 +100,8 @@ function save() {
     </article>
   </section>
 
+  <p>This will save this roster to your Browser's localstorage, so as long as you do not change browsers or use private browsing, this will persist across sessions. No data is sent to any other locaations.</p>
+
   <div class="btn-cyan" @click="save">Save</div>
 </template>
 
@@ -110,8 +112,12 @@ h2 {
   @apply mt-4 mb-6 pb-2;
 }
 
+p {
+  @apply my-8;
+}
+
 section {
-  @apply my-8
+  @apply my-8;
 }
 
 .RosterNameInput {
